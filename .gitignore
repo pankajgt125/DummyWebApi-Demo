@@ -1,0 +1,28 @@
+# Build Folders
+bin/
+obj/
+
+# User-specific files
+*.user
+*.suo
+
+# Visual Studio
+.vs/
+*.vscode/
+
+# Mac / Linux
+.DS_Store
+
+# Logs
+*.log
+
+# Environment files
+.env
+.env.*
+
+# NuGet
+*.nupkg
+packages/
+
+# Others
+node_modules/
