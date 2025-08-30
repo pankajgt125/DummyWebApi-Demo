@@ -33,14 +33,14 @@ builder.Services.AddDbContext<WeatherDBContext>(options =>
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
+//if (app.Environment.IsDevelopment())
+//{
     app.UseSwagger();
     app.UseSwaggerUI(options =>
     {
         options.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
     });
-}
+//}
 app.UseHttpsRedirection();
 
 app.UseAuthorization();

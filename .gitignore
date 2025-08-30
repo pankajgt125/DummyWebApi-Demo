@@ -26,3 +26,6 @@ packages/
 
 # Others
 node_modules/
+
+#Properties
+Properties/

@@ -1,7 +1,10 @@
+using System.Collections.Generic;
+using System.Xml.Serialization;
 using Asp.Versioning;
 using DummyWebApi.Models;
 using DummyWebApi.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace DummyWebApi.Controllers.v2;
 
@@ -17,7 +20,7 @@ public class WeatherForecastController : ControllerBase
 
     private readonly ILogger<WeatherForecastController> _logger;
     private readonly IWeatherRepository _iWeatherRepositories;
-    public WeatherForecastController(ILogger<WeatherForecastController> logger, IWeatherRepository iWeatherRepositories)
+    public WeatherForecastController(ILogger<WeatherForecastController> logger, IWeatherRepository iWeatherRepositories, IMemoryCache cache)
     {
         _logger = logger;
         _iWeatherRepositories = iWeatherRepositories;

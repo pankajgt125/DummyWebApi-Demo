@@ -2,6 +2,7 @@ using Asp.Versioning;
 using DummyWebApi.Models;
 using DummyWebApi.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace DummyWebApi.Controllers.v1;
 
