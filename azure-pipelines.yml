@@ -1,22 +1,22 @@
 trigger:
 - main
 
-# Use Microsoft-hosted agent (recommended)
 pool:
-  vmImage: 'windows-latest'
+  name: 'MyProjectAgentPool'   # use your own self-hosted pool
 
 variables:
   buildConfiguration: 'Release'
 
 steps:
-# 1. Install .NET 9 SDK
+# 1. Ensure .NET 9 SDK is installed on the agent
+#    (downloads and installs into the agent's _work folder if not present)
 - task: UseDotNet@2
   inputs:
     packageType: 'sdk'
     version: '9.x'
-    includePreviewVersions: true    # Required because .NET 9 is in preview (until LTS release)
+    includePreviewVersions: true   # needed until .NET 9 is GA
 
-# 2. Authenticate to private feeds (remove if only using nuget.org)
+# 2. Authenticate against private NuGet feeds (remove if only using nuget.org)
 - task: NuGetAuthenticate@1
 
 # 3. Restore dependencies
