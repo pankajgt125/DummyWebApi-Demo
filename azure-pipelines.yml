@@ -1,52 +1,52 @@
 trigger:
 - main
 
+# Use Microsoft-hosted agent (recommended)
 pool:
-  name: 'MyProjectAgentPool'   # keep if you're using self-hosted agent
-  # or use Microsoft-hosted agent:
-  # vmImage: 'windows-latest'
+  vmImage: 'windows-latest'
 
 variables:
   buildConfiguration: 'Release'
 
 steps:
-# Install the .NET SDK that matches your csproj <TargetFramework>
+# 1. Install .NET 9 SDK
 - task: UseDotNet@2
   inputs:
     packageType: 'sdk'
-    version: '6.x'   # change to 7.x or 8.x if your project targets that
+    version: '9.x'
+    includePreviewVersions: true    # Required because .NET 9 is in preview (until LTS release)
 
-# Authenticate against private NuGet feeds (Azure Artifacts, etc.)
+# 2. Authenticate to private feeds (remove if only using nuget.org)
 - task: NuGetAuthenticate@1
 
-# Restore dependencies
+# 3. Restore dependencies
 - task: DotNetCoreCLI@2
   inputs:
     command: 'restore'
     projects: '**/*.sln'
 
-# Build the solution
+# 4. Build the solution
 - task: DotNetCoreCLI@2
   inputs:
     command: 'build'
     projects: '**/*.sln'
     arguments: '--configuration $(buildConfiguration)'
 
-# Run tests (if you have test projects)
+# 5. Run tests (if you have test projects)
 - task: DotNetCoreCLI@2
   inputs:
     command: 'test'
     projects: '**/*Tests/*.csproj'
     arguments: '--configuration $(buildConfiguration)'
 
-# Publish the Web API
+# 6. Publish the Web API
 - task: DotNetCoreCLI@2
   inputs:
     command: 'publish'
     publishWebProjects: true
     arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
 
-# Publish build artifacts
+# 7. Publish build artifacts
 - task: PublishBuildArtifacts@1
   inputs:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
