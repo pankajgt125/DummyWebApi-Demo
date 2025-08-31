@@ -2,46 +2,51 @@ trigger:
 - main
 
 pool:
-  name: 'MyProjectAgentPool'
+  name: 'MyProjectAgentPool'   # keep if you're using self-hosted agent
+  # or use Microsoft-hosted agent:
+  # vmImage: 'windows-latest'
 
 variables:
-  buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
 
 steps:
-# Ensure correct .NET SDK is installed
+# Install the .NET SDK that matches your csproj <TargetFramework>
 - task: UseDotNet@2
   inputs:
     packageType: 'sdk'
-    version: '8.x'     # or 6.x/7.x depending on your project
+    version: '6.x'   # change to 7.x or 8.x if your project targets that
 
-# Restore using dotnet (not NuGet)
+# Authenticate against private NuGet feeds (Azure Artifacts, etc.)
+- task: NuGetAuthenticate@1
+
+# Restore dependencies
 - task: DotNetCoreCLI@2
   inputs:
     command: 'restore'
-    projects: '**/*.csproj'
+    projects: '**/*.sln'
 
-# Build
+# Build the solution
 - task: DotNetCoreCLI@2
   inputs:
     command: 'build'
-    projects: '**/*.csproj'
+    projects: '**/*.sln'
     arguments: '--configuration $(buildConfiguration)'
 
-# Test
+# Run tests (if you have test projects)
 - task: DotNetCoreCLI@2
   inputs:
     command: 'test'
     projects: '**/*Tests/*.csproj'
     arguments: '--configuration $(buildConfiguration)'
 
-# Publish artifacts
+# Publish the Web API
 - task: DotNetCoreCLI@2
   inputs:
     command: 'publish'
     publishWebProjects: true
     arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
 
+# Publish build artifacts
 - task: PublishBuildArtifacts@1
   inputs:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
